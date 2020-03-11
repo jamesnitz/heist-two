@@ -15,33 +15,33 @@ namespace heist_two
             var garrett = new Muscle()
             {
                 Name = "Mr. Stale",
-                SkillLevel = 50,
+                SkillLevel = 75,
                 PercentageCut = 10
             };
             var william = new Hacker()
             {
                 Name = "Squillium",
-                SkillLevel = 25,
+                SkillLevel = 75,
                 PercentageCut = 20
             };
             var kev = new LockSpecialist()
             {
                 Name = "Kith Boy",
-                SkillLevel = 35,
+                SkillLevel = 100,
                 PercentageCut = 25
             };
             var namita = new Muscle()
             {
                 Name = "Ms. Manohar",
-                SkillLevel = 35,
+                SkillLevel = 100,
                 PercentageCut = 25
             };
 
             var steve = new Hacker()
             {
                 Name = "ChortleHoort",
-                SkillLevel = 85,
-                PercentageCut = 90
+                SkillLevel = 100,
+                PercentageCut = 30
             };
 
             Rolodex.Add(garrett);
@@ -112,7 +112,6 @@ namespace heist_two
                     {
                         Console.Clear();
                         Console.WriteLine($"{userInputSpeciality} is not a speciality. Please enter a valid specialty.");
-
                     }
                 }
             }
@@ -123,6 +122,11 @@ namespace heist_two
             var vaultScore = randy.Next(0, 101);
             var securityGuardScore = randy.Next(0, 101);
             var cashOnHand = randy.Next(50000, 1000001);
+            nationalBank.AlarmScore = alarmScore;
+            nationalBank.VaultScore = vaultScore;
+            nationalBank.SecurityGuardScore = securityGuardScore;
+            nationalBank.CashOnHand = cashOnHand;
+
             bankScores.Add("alarm ", alarmScore);
             bankScores.Add("vault ", vaultScore);
             bankScores.Add("Security guard ", securityGuardScore);
@@ -138,9 +142,8 @@ namespace heist_two
             {
                 Console.WriteLine($"{Rolodex.IndexOf(mem)} {mem.ToString()}");
             }
-
             List<IRobber> crew = new List<IRobber>();
-            var totalTake = 100;
+            double totalTake = 100;
             while (true)
             {
                 Console.WriteLine("Assemble your crew! Enter your Member #");
@@ -165,10 +168,8 @@ namespace heist_two
                     if (mem.PercentageCut < totalTake)
                     {
                         Console.WriteLine($"{Rolodex.IndexOf(mem)} {mem.ToString()}");
-
                     }
                 }
-
             }
             Console.WriteLine("YOUR ASSEMBLED CREW IS");
             foreach (var item in crew)
@@ -176,6 +177,28 @@ namespace heist_two
                 Console.WriteLine($"{item.ToString()}");
             }
             Console.WriteLine("---------");
+            foreach (var crewMember in crew)
+            {
+                crewMember.PerformSkill(nationalBank);
+                if (nationalBank.IsSecure == true)
+                {
+                    Console.WriteLine($"{crewMember.Name} failed!");
+                }
+                else
+                {
+                    Console.WriteLine($"You Did it");
+                    double totalMemberEarnings = 0;
+                    foreach (var memby in crew)
+                    {
+                        var memberEarnings = (memby.PercentageCut / 100) * nationalBank.CashOnHand;
+                        totalMemberEarnings += memberEarnings;
+                        Console.WriteLine($"{memby.Name} earned {memberEarnings.ToString("C")}");
+                    }
+                    Console.WriteLine($"{nationalBank.CashOnHand}");
+                    double myCash = nationalBank.CashOnHand - totalMemberEarnings;
+                    Console.WriteLine($"The mastermind earned {myCash.ToString("C")}");
+                }
+            }
 
         }
     }
