@@ -17,6 +17,10 @@ namespace heist_two
       }
 
     }
+    public override string ToString()
+    {
+      return $"{Name} is a lock wizz and has a skill level of {SkillLevel} and wants a {PercentageCut}% cut";
+    }
 
   }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace heist_two
 {
@@ -9,6 +10,8 @@ namespace heist_two
         {
             Console.WriteLine("Hello Heisters");
             List<IRobber> Rolodex = new List<IRobber>();
+            Bank nationalBank = new Bank();
+
             var garrett = new Muscle()
             {
                 Name = "Mr. Stale",
@@ -38,7 +41,7 @@ namespace heist_two
             {
                 Name = "ChortleHoort",
                 SkillLevel = 85,
-                PercentageCut = 40
+                PercentageCut = 90
             };
 
             Rolodex.Add(garrett);
@@ -111,9 +114,69 @@ namespace heist_two
                         Console.WriteLine($"{userInputSpeciality} is not a speciality. Please enter a valid specialty.");
 
                     }
-
                 }
             }
+            //END OF BUILDER SECTION
+            Dictionary<string, int> bankScores = new Dictionary<string, int>();
+            Random randy = new Random();
+            var alarmScore = randy.Next(0, 101);
+            var vaultScore = randy.Next(0, 101);
+            var securityGuardScore = randy.Next(0, 101);
+            var cashOnHand = randy.Next(50000, 1000001);
+            bankScores.Add("alarm ", alarmScore);
+            bankScores.Add("vault ", vaultScore);
+            bankScores.Add("Security guard ", securityGuardScore);
+            var orderedScores = bankScores.OrderBy(score => score.Value);
+            var mostSecure = orderedScores.Last();
+            var leastSecure = orderedScores.First();
+
+            Console.WriteLine("------RECON REPORT------");
+            Console.WriteLine($"Most secure is: {mostSecure.Key}.  Least secure is {leastSecure.Key}.");
+            Console.WriteLine("---------------------------");
+            //
+            foreach (var mem in Rolodex)
+            {
+                Console.WriteLine($"{Rolodex.IndexOf(mem)} {mem.ToString()}");
+            }
+
+            List<IRobber> crew = new List<IRobber>();
+            var totalTake = 100;
+            while (true)
+            {
+                Console.WriteLine("Assemble your crew! Enter your Member #");
+                var chosenMember = Console.ReadLine();
+                if (chosenMember == "")
+                {
+                    break;
+                }
+                foreach (var item in Rolodex)
+                {
+                    if (int.Parse(chosenMember) == Rolodex.IndexOf(item))
+                    {
+                        crew.Add(item);
+                        totalTake -= item.PercentageCut;
+                        Console.WriteLine($"{totalTake} is left");
+                        Rolodex.Remove(item);
+                        break;
+                    }
+                }
+                foreach (var mem in Rolodex)
+                {
+                    if (mem.PercentageCut < totalTake)
+                    {
+                        Console.WriteLine($"{Rolodex.IndexOf(mem)} {mem.ToString()}");
+
+                    }
+                }
+
+            }
+            Console.WriteLine("YOUR ASSEMBLED CREW IS");
+            foreach (var item in crew)
+            {
+                Console.WriteLine($"{item.ToString()}");
+            }
+            Console.WriteLine("---------");
+
         }
     }
 }

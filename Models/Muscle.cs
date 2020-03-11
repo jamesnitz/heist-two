@@ -16,5 +16,9 @@ namespace heist_two
         Console.WriteLine($"{Name} has defeated all guards. But they're not dead");
       }
     }
+    public override string ToString()
+    {
+      return $"{Name} is a muscle person and has a skill level of {SkillLevel} and wants a {PercentageCut}% cut";
+    }
   }
 }
